@@ -37,25 +37,6 @@ class JsonOutputCommand extends Command {
 	 */
 	public function fire()
 	{
-		
-		// $username = 'root';
-		// $password = '';
-
-		// try{
-		// $conn = new PDO ('mysql:host=localhost;dbname=tvguide',$username, $password);
-		// $query = "SELECT * FROM events";
-		// $stmt = $conn->prepare($query);
-		// $stmt ->execute();
-
-		// $stagedevents = array();
-		// while($result = $stmt->fetch(PDO::FETCH_ASSOC))
-		// {
-		// 	$stagedevents[] = $result;
-		// }
-
-		// $count = count($stagedevents);
-		// $finalEvents = array();
-		//$tvguide_channel=array("shows"=>);
 		$argumentdate = str_replace('_', ' ',$this->option('date'));
 		//$carboninputdate = Carbon::createFromFormat('Y-m-d H:i:s','2014-02-14 03:01:00');
 		$carboninputdate = Carbon::createFromFormat('Y-m-d H:i:s',$argumentdate);
@@ -74,15 +55,16 @@ class JsonOutputCommand extends Command {
 			}
 			$carbon_start_date = Carbon::createFromFormat('d.m.Y H:i:s:00', $stagedevents[$i]->starting_time);
 			$carbon_end_date = Carbon::createFromFormat('d.m.Y H:i:s:00', $stagedevents[$nextelement]->starting_time);
-			// $finalEvents[$i]['isDisabled']='';
-			// $finalEvents[$i]['isCurrent']='';
-
+			
 			if($carboninputdate >=$carbon_start_date && $carboninputdate<= $carbon_end_date)
 			{
 				$finalEvents[$i]['isCurrent']=true;
 			}
-			else
+			else if($carbon_start_date < $carboninputdate)
+			{
+				$finalEvents[$i]['isCurrent']=false;
 				$finalEvents[$i]['isDisabled']=true;
+			}
 				
 			
 			
@@ -121,14 +103,6 @@ class JsonOutputCommand extends Command {
 			//print_r($finalEvents[0]);
 			//print_r($tvguide_channel);
 		}
-
-
-		// $conn=null;
-
-
-		// }catch(PDOException $e){
-		// 	echo 'ERROR: '.$e->getMessage();
-		// }
 
 		//noobtests
 
